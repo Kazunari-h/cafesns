@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B08E964130468CC4005A0D32 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B08E964030468CC4005A0D32 /* FirebaseCore */; };
+		B08E964330468CCB005A0D32 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B08E964230468CCB005A0D32 /* FirebaseFirestore */; };
+		B08E964530468CDE005A0D32 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B08E964430468CDE005A0D32 /* FirebaseAuth */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B00E202D2FEA4057008117DE /* cafesns.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cafesns.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B08E964130468CC4005A0D32 /* FirebaseCore in Frameworks */,
+				B08E964530468CDE005A0D32 /* FirebaseAuth in Frameworks */,
+				B08E964330468CCB005A0D32 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				B00E202F2FEA4057008117DE /* cafesns */,
+				B08E963F30468CC4005A0D32 /* Frameworks */,
 				B00E202E2FEA4057008117DE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +53,13 @@
 				B00E202D2FEA4057008117DE /* cafesns.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B08E963F30468CC4005A0D32 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +82,9 @@
 			);
 			name = cafesns;
 			packageProductDependencies = (
+				B08E964030468CC4005A0D32 /* FirebaseCore */,
+				B08E964230468CCB005A0D32 /* FirebaseFirestore */,
+				B08E964430468CDE005A0D32 /* FirebaseAuth */,
 			);
 			productName = cafesns;
 			productReference = B00E202D2FEA4057008117DE /* cafesns.app */;
@@ -342,6 +362,24 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B08E964030468CC4005A0D32 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B04E38AC3005F2EF00B7B8D4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		B08E964230468CCB005A0D32 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B04E38AC3005F2EF00B7B8D4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		B08E964430468CDE005A0D32 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B04E38AC3005F2EF00B7B8D4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B00E20252FEA4056008117DE /* Project object */;
 }

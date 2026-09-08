@@ -6,6 +6,8 @@
 //
 
 import Combine
+import FirebaseCore
+import FirebaseFirestore
 
 // 投稿 (Post)
 struct Post: Identifiable {
@@ -15,6 +17,9 @@ struct Post: Identifiable {
 }
 
 class HomeViewModel: ObservableObject {
+    
+    let db = Firestore.firestore()
+    
     @Published var posts: [Post] = [
         Post(
             id: 0,
@@ -27,4 +32,28 @@ class HomeViewModel: ObservableObject {
             shop: nil
         )
     ]
+    
+    func startEventListener() {
+        db.collection("posts")
+            .addSnapshotListener { querySnapshot, error in
+                if let error = error {
+                    // エラーがある場合
+                }
+                
+                if let snapshot = querySnapshot {
+                    // 変更がある場合
+                    
+                    snapshot.documentChanges.forEach { change in
+                        switch change.type {
+                        case .added:
+                            break
+                        case .modified:
+                            break
+                        case .removed:
+                            break
+                        }
+                    }
+                }
+            }
+    }
 }
