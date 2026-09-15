@@ -12,3 +12,6 @@ build/
 
 # macOS
 .DS_Store
+
+# Firebase設定ファイル (APIキーを含むためコミットしない)
+GoogleService-Info.plist

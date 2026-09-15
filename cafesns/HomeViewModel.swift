@@ -11,49 +11,68 @@ import FirebaseFirestore
 
 // 投稿 (Post)
 struct Post: Identifiable {
-    var id: Int
+    /// FirestoreのドキュメントID
+    let id: String
     let text: String
     let shop: String?
+    let createdAt: Date?
+
+    /// Firestoreのドキュメントから投稿を生成する。
+    /// 必須フィールド (text) が無いドキュメントは nil を返す。
+    init?(document: DocumentSnapshot) {
+        guard let data = document.data(),
+              let text = data["text"] as? String else {
+            return nil
+        }
+        self.id = document.documentID
+        self.text = text
+        self.shop = data["shop"] as? String
+        self.createdAt = (data["createdAt"] as? Timestamp)?.dateValue()
+    }
 }
 
+@MainActor
 class HomeViewModel: ObservableObject {
-    
-    let db = Firestore.firestore()
-    
-    @Published var posts: [Post] = [
-        Post(
-            id: 0,
-            text: "サラダチキンがすごく美味しかった。お店も綺麗でよかったです。店員さんも丁寧でまた来ようと思います。",
-            shop: "サブウェイ 小田急ハルク店"
-        ),
-        Post(
-            id: 1,
-            text: "店員さんがすごく丁寧。コーヒープレスが美味しくて過ごしやすい。お昼はすごく混むので時間を外したほうがいいです。",
-            shop: nil
-        )
-    ]
-    
+
+    private let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
+
+    @Published var posts: [Post] = []
+    @Published var errorMessage: String?
+    @Published var isLoading = false
+
+    deinit {
+        listener?.remove()
+    }
+
+    /// posts コレクションの変更を監視して posts を更新する。
     func startEventListener() {
-        db.collection("posts")
-            .addSnapshotListener { querySnapshot, error in
-                if let error = error {
-                    // エラーがある場合
+        // 二重登録を防ぐ
+        guard listener == nil else { return }
+
+        isLoading = true
+        errorMessage = nil
+
+        listener = db.collection("posts")
+            .order(by: "createdAt", descending: true)
+            .addSnapshotListener { [weak self] querySnapshot, error in
+                guard let self else { return }
+                self.isLoading = false
+
+                if let error {
+                    self.errorMessage = "投稿の取得に失敗しました: \(error.localizedDescription)"
+                    return
                 }
-                
-                if let snapshot = querySnapshot {
-                    // 変更がある場合
-                    
-                    snapshot.documentChanges.forEach { change in
-                        switch change.type {
-                        case .added:
-                            break
-                        case .modified:
-                            break
-                        case .removed:
-                            break
-                        }
-                    }
-                }
+
+                guard let snapshot = querySnapshot else { return }
+
+                // スナップショット全体で置き換える (追加・更新・削除をまとめて反映)
+                self.posts = snapshot.documents.compactMap { Post(document: $0) }
             }
+    }
+
+    func stopEventListener() {
+        listener?.remove()
+        listener = nil
     }
 }
