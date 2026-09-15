@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
 
     @StateObject var vm = HomeViewModel()
+    @State private var isShowingEditor = false
 
     var body: some View {
         NavigationStack {
@@ -36,6 +37,18 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("ホーム")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isShowingEditor = true
+                    } label: {
+                        Label("投稿する", systemImage: "square.and.pencil")
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingEditor) {
+                EditorView()
+            }
         }
         .onAppear {
             vm.startEventListener()

@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct EditorView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = EditorViewModel()
 
     var body: some View {
         NavigationStack {
             Form {
+                Section("お店") {
+                    TextField("例: サブウェイ 小田急ハルク店 (任意)", text: $viewModel.shopName)
+                }
+
                 Section("投稿内容") {
                     ZStack(alignment: .topLeading) {
                         if viewModel.postText.isEmpty {
@@ -27,15 +32,40 @@ struct EditorView: View {
                             .scrollContentBackground(.hidden)
                     }
                 }
+
+                if let errorMessage = viewModel.errorMessage {
+                    Section {
+                        Text(errorMessage)
+                            .foregroundStyle(.red)
+                    }
+                }
             }
             .navigationTitle("投稿")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("投稿") {
-                        viewModel.clearDraft()
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("キャンセル") {
+                        dismiss()
                     }
-                    .disabled(!viewModel.canSubmit)
+                    .disabled(viewModel.isSubmitting)
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    if viewModel.isSubmitting {
+                        ProgressView()
+                    } else {
+                        Button("投稿") {
+                            Task {
+                                await viewModel.submit()
+                            }
+                        }
+                        .disabled(!viewModel.canSubmit)
+                    }
+                }
+            }
+            .onChange(of: viewModel.didSubmit) { _, didSubmit in
+                if didSubmit {
+                    dismiss()
                 }
             }
         }
