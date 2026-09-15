@@ -63,7 +63,6 @@ struct EditorView: View {
                     }
                 }
             }
-            .interactiveDismissDisabled(viewModel.isSubmitting)
             .onChange(of: viewModel.didSubmit) { _, didSubmit in
                 if didSubmit {
                     dismiss()
